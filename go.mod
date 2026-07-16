@@ -1,5 +1,5 @@
-module github.com/kazeburo/ltsvparser
+module github.com/monitoring-forge/ltsvparser
 
-go 1.17
+go 1.25
 
-require github.com/go-test/deep v1.1.0
+require github.com/go-test/deep v1.1.1
