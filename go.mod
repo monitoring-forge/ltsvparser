@@ -1,4 +1,4 @@
-module github.com/monitoring-forge/ltsvparser
+module github.com/kazeburo/ltsvparser
 
 go 1.25
 
