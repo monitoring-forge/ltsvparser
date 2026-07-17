@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.2.3](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.2...v0.2.3) - 2026-07-17
+
+- Change module path from kazeburo to monitoring-forge by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/7
+
 ## [v0.2.2](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.1...v0.2.2) - 2026-07-17
 
 - Change module path from monitoring-forge to kazeburo by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/5
