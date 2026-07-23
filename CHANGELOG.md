@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.2.4](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.3...v0.2.4) - 2026-07-23
+
+- ci: bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/9
+
 ## [v0.2.3](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.2...v0.2.3) - 2026-07-17
 
 - Change module path from kazeburo to monitoring-forge by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/7
