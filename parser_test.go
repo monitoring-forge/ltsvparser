@@ -171,7 +171,7 @@ func TestEachCancel(t *testing.T) {
 
 func TestEachCancelWithNewCanceler(t *testing.T) {
 	count := 0
-	var cancel *Canceler
+	cancel := &Canceler{}
 	err := Each(
 		[]byte("user:kazeburo\tage:43\theight:163.1\tweight:55.9"),
 		func(i int, v []byte) error {

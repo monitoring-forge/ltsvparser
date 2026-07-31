@@ -50,14 +50,9 @@ func matchAndCallback(
 	keys [][]byte,
 ) error {
 	for i := range keys {
-		if !bytes.Equal(key, keys[i]) {
-			continue
+		if bytes.Equal(key, keys[i]) {
+			return callback(i, value)
 		}
-		errCallback := callback(i, value)
-		if errCallback == nil {
-			continue
-		}
-		return errCallback
 	}
 	return nil
 }
