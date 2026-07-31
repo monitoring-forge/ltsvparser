@@ -2,59 +2,84 @@ package ltsvparser
 
 import (
 	"bytes"
+	"errors"
 )
 
-var tab = []byte("\t")
-var col = []byte(":")
-var null = []byte("")
+var TAB = []byte("\t")
+var COL = []byte(":")
+var NULL = []byte("")
 
-type Canceler struct{}
+// Canceler is used to stop parser without errors
+type Canceler struct{} //nolint:errname
+
+type CallBackFunc func(int, []byte) error
 
 func (e *Canceler) Error() string {
 	return ""
 }
 
-// Stop parser without errors
-var Cancel = &Canceler{}
+// Canceler is used to stop parser without errors
+var Cancel = &Canceler{} //nolint:errname
 
-// Extract multiple keys from LTSV
-func Each(d []byte, cb func(int, []byte) error, keys ...[]byte) error {
-	p1 := 0
-	dlen := len(d)
-	for {
-		if dlen <= p1 {
-			break
-		}
-		p2 := bytes.Index(d[p1:], tab)
-		if p2 == 0 { // first byte is tab
-			p1 += p2 + 1
+func seekField(d []byte, start int) (field []byte, next int) {
+	p2 := bytes.Index(d[start:], TAB)
+	if p2 == 0 {
+		return nil, start + 1
+	}
+	if p2 < 0 {
+		return d[start:], len(d)
+	}
+	return d[start : start+p2], start + p2 + 1
+}
+
+func splitField(field []byte) (key []byte, value []byte) {
+	p3 := bytes.Index(field, COL)
+	if p3 < 0 {
+		return field, NULL
+	}
+	if p3+1 >= len(field) {
+		return field[:p3], NULL
+	}
+	return field[:p3], field[p3+1:]
+}
+
+func matchAndCallback(
+	key []byte,
+	value []byte,
+	callback CallBackFunc,
+	keys [][]byte,
+) error {
+	for i := range keys {
+		if !bytes.Equal(key, keys[i]) {
 			continue
 		}
-		if p2 < 0 { // could not find tab
-			p2 = dlen - p1
+		errCallback := callback(i, value)
+		if errCallback == nil {
+			continue
 		}
-		p3 := bytes.Index(d[p1:p1+p2], col)
-		if p3 < 0 { // could not find :
-			p3 = p2
-		}
+		return errCallback
+	}
+	return nil
+}
 
-		for i := range keys {
-			if bytes.Equal(d[p1:p1+p3], keys[i]) {
-				var cbErr error
-				if p2-p3 <= 1 {
-					cbErr = cb(i, null)
-				} else {
-					cbErr = cb(i, d[p1+p3+1:p1+p2])
-				}
-				if cbErr != nil {
-					if _, ok := cbErr.(*Canceler); ok {
-						return nil
-					}
-					return cbErr
-				}
-			}
+// Extract multiple keys from LTSV
+func Each(d []byte, callback CallBackFunc, keys ...[]byte) error {
+	p1 := 0
+	dlen := len(d)
+	for dlen > p1 {
+		field, next := seekField(d, p1)
+		p1 = next
+		if field == nil {
+			continue
 		}
-		p1 += p2 + 1
+		key, value := splitField(field)
+		err := matchAndCallback(key, value, callback, keys)
+		if err != nil {
+			if errors.Is(err, Cancel) {
+				return nil
+			}
+			return err
+		}
 	}
 	return nil
 }
