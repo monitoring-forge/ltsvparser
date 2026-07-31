@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.2.4](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.3...v0.2.4) - 2026-07-31
+
+- ci: bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/9
+- add pr-agent and lint, refactor and fix issues by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/12
+- ci: bump actions/checkout from 7.0.0 to 7.0.1 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/11
+
 ## [v0.2.3](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.2...v0.2.3) - 2026-07-17
 
 - Change module path from kazeburo to monitoring-forge by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/7
