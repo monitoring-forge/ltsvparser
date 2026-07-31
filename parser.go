@@ -5,9 +5,9 @@ import (
 	"errors"
 )
 
-var TAB = []byte("\t")
-var COL = []byte(":")
-var NULL = []byte("")
+var byteTAB = []byte("\t")
+var byteCOL = []byte(":")
+var byteNULL = []byte("")
 
 // Canceler is used to stop parser without errors
 type Canceler struct{} //nolint:errname
@@ -22,7 +22,7 @@ func (e *Canceler) Error() string {
 var Cancel = &Canceler{} //nolint:errname
 
 func seekField(d []byte, start int) (field []byte, next int) {
-	p2 := bytes.Index(d[start:], TAB)
+	p2 := bytes.Index(d[start:], byteTAB)
 	if p2 == 0 {
 		return nil, start + 1
 	}
@@ -33,12 +33,12 @@ func seekField(d []byte, start int) (field []byte, next int) {
 }
 
 func splitField(field []byte) (key []byte, value []byte) {
-	p3 := bytes.Index(field, COL)
+	p3 := bytes.Index(field, byteCOL)
 	if p3 < 0 {
-		return field, NULL
+		return field, byteNULL
 	}
 	if p3+1 >= len(field) {
-		return field[:p3], NULL
+		return field[:p3], byteNULL
 	}
 	return field[:p3], field[p3+1:]
 }
@@ -75,7 +75,8 @@ func Each(d []byte, callback CallBackFunc, keys ...[]byte) error {
 		key, value := splitField(field)
 		err := matchAndCallback(key, value, callback, keys)
 		if err != nil {
-			if errors.Is(err, Cancel) {
+			var c *Canceler
+			if errors.As(err, &c) {
 				return nil
 			}
 			return err

@@ -168,3 +168,23 @@ func TestEachCancel(t *testing.T) {
 		t.Errorf("cb called once %d", count)
 	}
 }
+
+func TestEachCancelWithNewCanceler(t *testing.T) {
+	count := 0
+	var cancel *Canceler
+	err := Each(
+		[]byte("user:kazeburo\tage:43\theight:163.1\tweight:55.9"),
+		func(i int, v []byte) error {
+			count = count + 1
+			return cancel
+		},
+		[]byte("user"),
+		[]byte("age"),
+	)
+	if err != nil {
+		t.Error("error should be null")
+	}
+	if count != 1 {
+		t.Errorf("cb called once %d", count)
+	}
+}
