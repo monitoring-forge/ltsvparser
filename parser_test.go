@@ -7,104 +7,134 @@ import (
 	"github.com/go-test/deep"
 )
 
-var parseTests = []struct {
+type testCase struct {
 	Name   string
 	Input  string
 	Keys   []string
 	Values []string
 	Hits   []bool
-}{
-	{
-		Name:   "Simple",
+}
+
+type testCaseOptions func(*testCase)
+
+func withName(name string) testCaseOptions {
+	return func(tc *testCase) {
+		tc.Name = name
+	}
+}
+
+func withInput(input string) testCaseOptions {
+	return func(tc *testCase) {
+		tc.Input = input
+	}
+}
+
+func withKeys(keys []string) testCaseOptions {
+	return func(tc *testCase) {
+		tc.Keys = keys
+	}
+}
+
+func withValues(values []string) testCaseOptions {
+	return func(tc *testCase) {
+		tc.Values = values
+	}
+}
+
+func withHits(hits []bool) testCaseOptions {
+	return func(tc *testCase) {
+		tc.Hits = hits
+	}
+}
+
+func buildTestCase(opts ...testCaseOptions) testCase {
+	tc := testCase{
+		Name:   "Default",
 		Input:  "user:kazeburo\tage:43\theight:163.1\tweight:55.9",
-		Keys:   []string{"user", "age", "weight"},
-		Values: []string{"kazeburo", "43", "55.9"},
-		Hits:   []bool{true, true, true},
-	},
-	{
-		Name:   "Simple order",
-		Input:  "user:kazeburo\tage:43\theight:163.1\tweight:55.9",
-		Keys:   []string{"user", "weight", "age"},
-		Values: []string{"kazeburo", "55.9", "43"},
-		Hits:   []bool{true, true, true},
-	},
-	{
-		Name:   "Simple order 2",
-		Input:  "user:kazeburo\tage:43\theight:163.1\tweight:55.9",
-		Keys:   []string{"height", "user", "age"},
-		Values: []string{"163.1", "kazeburo", "43"},
-		Hits:   []bool{true, true, true},
-	},
-	{
-		Name:   "Empty",
-		Input:  "user:kazeburo\tage:\theight:-\tweight:55.9",
-		Keys:   []string{"user", "age", "height"},
-		Values: []string{"kazeburo", "", "-"},
-		Hits:   []bool{true, true, true},
-	},
-	{
-		Name:   "Not exists",
-		Input:  "user:kazeburo\tage:43\theight:163.1\tweight:55.9",
-		Keys:   []string{"user", "age2", "height"},
-		Values: []string{"kazeburo", "", "163.1"},
-		Hits:   []bool{true, false, true},
-	},
-	{
-		Name:   "Not exit : in middle",
-		Input:  "user:kazeburo\tage\theight:163.1\tweight:55.9",
-		Keys:   []string{"user", "age", "height"},
-		Values: []string{"kazeburo", "", "163.1"},
-		Hits:   []bool{true, true, true},
-	},
-	{
-		Name:   "only one",
-		Input:  "user:kazeburo",
-		Keys:   []string{"user"},
-		Values: []string{"kazeburo"},
-		Hits:   []bool{true},
-	},
-	{
-		Name:   "not exist : at last",
-		Input:  "user:kazeburo\tage",
-		Keys:   []string{"user", "age"},
-		Values: []string{"kazeburo", ""},
-		Hits:   []bool{true, true},
-	},
-	{
-		Name:   "parse not ignore last",
-		Input:  "user:kazeburo\tage:",
-		Keys:   []string{"user", "age"},
-		Values: []string{"kazeburo", ""},
-		Hits:   []bool{true, true},
-	},
-	{
-		Name:   "parse end with tab",
-		Input:  "user:kazeburo\t",
-		Keys:   []string{"user"},
-		Values: []string{"kazeburo"},
-		Hits:   []bool{true},
-	},
-	{
-		Name:   "Simple Ir",
-		Input:  "\tuser:kazeburo\t\tage::43\theight:163.1\tweight:55.9",
-		Keys:   []string{"user", "age", "weight", ""},
-		Values: []string{"kazeburo", ":43", "55.9", ""},
-		Hits:   []bool{true, true, true, false},
-	},
-	{
-		Name:   "Simple Ir 2",
-		Input:  "\tuser:kazeburo\t:\tage::43\theight:163.1\tweight:55.9",
-		Keys:   []string{"user", "age", "weight", ""},
-		Values: []string{"kazeburo", ":43", "55.9", ""},
+		Keys:   []string{"user", "age", "height", "weight"},
+		Values: []string{"kazeburo", "43", "163.1", "55.9"},
 		Hits:   []bool{true, true, true, true},
-	},
-	{
-		Name:   "hyphen",
-		Input:  "referer:-\tuser:kazeburo\t:\tage::43\theight:163.1\tweight:55.9",
-		Keys:   []string{"referer", "user", "age", "weight", ""},
-		Values: []string{"-", "kazeburo", ":43", "55.9", ""},
-		Hits:   []bool{true, true, true, true, true},
-	},
+	}
+	for _, opt := range opts {
+		opt(&tc)
+	}
+	return tc
+}
+
+var parseTests = []testCase{
+	buildTestCase(
+		withName("Simple"),
+		withKeys([]string{"user", "age", "weight"}),
+		withValues([]string{"kazeburo", "43", "55.9"}),
+		withHits([]bool{true, true, true})),
+	buildTestCase(
+		withName("Simple order"),
+		withKeys([]string{"user", "weight", "age"}),
+		withValues([]string{"kazeburo", "55.9", "43"}),
+		withHits([]bool{true, true, true})),
+	buildTestCase(
+		withName("Simple order 2"),
+		withKeys([]string{"height", "user", "age"}),
+		withValues([]string{"163.1", "kazeburo", "43"}),
+		withHits([]bool{true, true, true})),
+	buildTestCase(
+		withName("Empty"),
+		withInput("user:kazeburo\tage:\theight:-\tweight:55.9"),
+		withKeys([]string{"user", "age", "height"}),
+		withValues([]string{"kazeburo", "", "-"}),
+		withHits([]bool{true, true, true})),
+	buildTestCase(
+		withName("Not exists"),
+		withKeys([]string{"user", "age2", "height"}),
+		withValues([]string{"kazeburo", "", "163.1"}),
+		withHits([]bool{true, false, true})),
+	buildTestCase(
+		withName("Not exit : in middle"),
+		withInput("user:kazeburo\tage\theight:163.1\tweight:55.9"),
+		withKeys([]string{"user", "age", "height"}),
+		withValues([]string{"kazeburo", "", "163.1"}),
+		withHits([]bool{true, true, true})),
+	buildTestCase(
+		withName("only one"),
+		withInput("user:kazeburo"),
+		withKeys([]string{"user"}),
+		withValues([]string{"kazeburo"}),
+		withHits([]bool{true})),
+	buildTestCase(
+		withName("not exist : at last"),
+		withInput("user:kazeburo\tage"),
+		withKeys([]string{"user", "age"}),
+		withValues([]string{"kazeburo", ""}),
+		withHits([]bool{true, true})),
+	buildTestCase(
+		withName("parse not ignore last"),
+		withInput("user:kazeburo\tage:"),
+		withKeys([]string{"user", "age"}),
+		withValues([]string{"kazeburo", ""}),
+		withHits([]bool{true, true})),
+	buildTestCase(
+		withName("parse end with tab"),
+		withInput("user:kazeburo\t"),
+		withKeys([]string{"user"}),
+		withValues([]string{"kazeburo"}),
+		withHits([]bool{true})),
+	buildTestCase(
+		withName("Simple Ir"),
+		withInput("\tuser:kazeburo\t\tage::43\theight:163.1\tweight:55.9"),
+		withKeys([]string{"user", "age", "weight", ""}),
+		withValues([]string{"kazeburo", ":43", "55.9", ""}),
+		withHits([]bool{true, true, true, false})),
+	buildTestCase(
+		withName("Simple Ir 2"),
+		withInput("\tuser:kazeburo\t:\tage::43\theight:163.1\tweight:55.9"),
+		withKeys([]string{"user", "age", "weight", ""}),
+		withValues([]string{"kazeburo", ":43", "55.9", ""})),
+	buildTestCase(
+		withName("hyphen"),
+		withInput("referer:-\tuser:kazeburo\t:\tage::43\theight:163.1\tweight:55.9"),
+		withKeys([]string{"referer", "user", "age", "weight", ""}),
+		withValues([]string{"-", "kazeburo", ":43", "55.9", ""}),
+		withHits([]bool{true, true, true, true, true})),
 }
 
 func TestEach(t *testing.T) {
