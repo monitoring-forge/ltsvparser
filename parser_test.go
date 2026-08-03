@@ -49,11 +49,11 @@ func withHits(hits []bool) testCaseOptions {
 
 func buildTestCase(opts ...testCaseOptions) testCase {
 	tc := testCase{
-		Name:   "Default",
+		Name:   "Simple",
 		Input:  "user:kazeburo\tage:43\theight:163.1\tweight:55.9",
-		Keys:   []string{"user", "age", "height", "weight"},
-		Values: []string{"kazeburo", "43", "163.1", "55.9"},
-		Hits:   []bool{true, true, true, true},
+		Keys:   []string{"user", "age", "weight"},
+		Values: []string{"kazeburo", "43", "55.9"},
+		Hits:   []bool{true, true, true},
 	}
 	for _, opt := range opts {
 		opt(&tc)
@@ -62,27 +62,20 @@ func buildTestCase(opts ...testCaseOptions) testCase {
 }
 
 var parseTests = []testCase{
-	buildTestCase(
-		withName("Simple"),
-		withKeys([]string{"user", "age", "weight"}),
-		withValues([]string{"kazeburo", "43", "55.9"}),
-		withHits([]bool{true, true, true})),
+	buildTestCase(),
 	buildTestCase(
 		withName("Simple order"),
 		withKeys([]string{"user", "weight", "age"}),
-		withValues([]string{"kazeburo", "55.9", "43"}),
-		withHits([]bool{true, true, true})),
+		withValues([]string{"kazeburo", "55.9", "43"})),
 	buildTestCase(
 		withName("Simple order 2"),
 		withKeys([]string{"height", "user", "age"}),
-		withValues([]string{"163.1", "kazeburo", "43"}),
-		withHits([]bool{true, true, true})),
+		withValues([]string{"163.1", "kazeburo", "43"})),
 	buildTestCase(
 		withName("Empty"),
 		withInput("user:kazeburo\tage:\theight:-\tweight:55.9"),
 		withKeys([]string{"user", "age", "height"}),
-		withValues([]string{"kazeburo", "", "-"}),
-		withHits([]bool{true, true, true})),
+		withValues([]string{"kazeburo", "", "-"})),
 	buildTestCase(
 		withName("Not exists"),
 		withKeys([]string{"user", "age2", "height"}),
@@ -92,8 +85,7 @@ var parseTests = []testCase{
 		withName("Not exit : in middle"),
 		withInput("user:kazeburo\tage\theight:163.1\tweight:55.9"),
 		withKeys([]string{"user", "age", "height"}),
-		withValues([]string{"kazeburo", "", "163.1"}),
-		withHits([]bool{true, true, true})),
+		withValues([]string{"kazeburo", "", "163.1"})),
 	buildTestCase(
 		withName("only one"),
 		withInput("user:kazeburo"),
@@ -128,13 +120,14 @@ var parseTests = []testCase{
 		withName("Simple Ir 2"),
 		withInput("\tuser:kazeburo\t:\tage::43\theight:163.1\tweight:55.9"),
 		withKeys([]string{"user", "age", "weight", ""}),
-		withValues([]string{"kazeburo", ":43", "55.9", ""})),
+		withValues([]string{"kazeburo", ":43", "55.9", ""}),
+		withHits([]bool{true, true, true, true})),
 	buildTestCase(
 		withName("hyphen"),
 		withInput("referer:-\tuser:kazeburo\t:\tage::43\theight:163.1\tweight:55.9"),
-		withKeys([]string{"referer", "user", "age", "weight", ""}),
-		withValues([]string{"-", "kazeburo", ":43", "55.9", ""}),
-		withHits([]bool{true, true, true, true, true})),
+		withKeys([]string{"referer", "user", "age", "weight"}),
+		withValues([]string{"-", "kazeburo", ":43", "55.9"}),
+		withHits([]bool{true, true, true, true})),
 }
 
 func TestEach(t *testing.T) {
