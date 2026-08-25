@@ -70,8 +70,7 @@ func Each(d []byte, callback CallBackFunc, keys ...[]byte) error {
 		key, value := splitField(field)
 		err := matchAndCallback(key, value, callback, keys)
 		if err != nil {
-			var c *Canceler
-			if errors.As(err, &c) {
+			if errors.As(err, &Cancel) {
 				return nil
 			}
 			return err
