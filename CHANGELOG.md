@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.2.5](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.4...v0.2.5) - 2026-08-25
+
+- refactor: restructure test cases using builder pattern  by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/13
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/ltsvparser/pull/15
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/ltsvparser/pull/16
+- feat: add benchmarks for Each function with and without cancelation by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/18
+- feat: optimize error handling in Each function by using shared Cancel… by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/19
+
 ## [v0.2.4](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.3...v0.2.4) - 2026-07-31
 
 - ci: bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/9
