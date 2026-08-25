@@ -211,3 +211,38 @@ func TestEachCancelWithNewCanceler(t *testing.T) {
 		t.Errorf("cb called once %d", count)
 	}
 }
+
+var input = []byte("time:08/Mar/2017:14:12:40 +0900	status:200	ptime:0.030	host:10.20.30.40	req:GET /example/path HTTP/1.1	method:GET	size:941	ua:Mozilla/5.0 (Linux; Android 4.4.2; SO-01F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Mobile Safari/537.36")
+var pk = []byte("status")
+var sk = []byte("ptime")
+
+func BenchmarkEach_WithCancel(b *testing.B) {
+	b.ResetTimer()
+	for range b.N {
+		_ = Each(
+			input,
+			func(i int, v []byte) error {
+				if i > 0 {
+					return Cancel
+				}
+				return nil
+			},
+			pk,
+			sk,
+		)
+	}
+}
+
+func BenchmarkEach_WithoutCancel(b *testing.B) {
+	b.ResetTimer()
+	for range b.N {
+		_ = Each(
+			input,
+			func(i int, v []byte) error {
+				return nil
+			},
+			pk,
+			sk,
+		)
+	}
+}
