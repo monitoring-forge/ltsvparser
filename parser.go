@@ -20,6 +20,8 @@ func (e *Canceler) Error() string {
 
 // Canceler is used to stop parser without errors
 var Cancel = &Canceler{} //nolint:errname
+// non public variable for errors.As check
+var cancel = &Canceler{} //nolint:errname
 
 func seekField(d []byte, start int) (field []byte, next int) {
 	p2 := bytes.Index(d[start:], byteTAB)
@@ -70,8 +72,7 @@ func Each(d []byte, callback CallBackFunc, keys ...[]byte) error {
 		key, value := splitField(field)
 		err := matchAndCallback(key, value, callback, keys)
 		if err != nil {
-			var c *Canceler
-			if errors.As(err, &c) {
+			if errors.As(err, &cancel) {
 				return nil
 			}
 			return err
