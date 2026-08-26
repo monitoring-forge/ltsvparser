@@ -68,15 +68,16 @@ Benchmark codes https://gist.github.com/kazeburo/204efec4fab4a781f887ffa3d08a69c
 Parse 100k lines of LTSV
 
 ```
+go test -bench . -benchmem -run=^./...
 goos: darwin
-goarch: amd64
+goarch: arm64
 pkg: github.com/kazeburo/go-ltsvparser-bench
-cpu: Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz
-BenchmarkLtsv-8                        1        3005857179 ns/op        554412888 B/op  17100068 allocs/op
-BenchmarkGoLtsv-8                      1        1020839457 ns/op        619206816 B/op   8100041 allocs/op
-BenchmarkLtsvParser-8                  5         212723109 ns/op            4216 B/op          4 allocs/op
+cpu: Apple M3
+BenchmarkLtsv-8         	       1	1557908291 ns/op	616017312 B/op	19000043 allocs/op
+BenchmarkGoLtsv-8       	       3	 400631569 ns/op	672005890 B/op	 7000013 allocs/op
+BenchmarkLtsvParser-8   	       7	 178214643 ns/op	    4216 B/op	       4 allocs/op
 PASS
-ok      github.com/kazeburo/go-ltsvparser-bench 6.474s
+ok  	github.com/kazeburo/go-ltsvparser-bench	5.587s
 ```
 
 ## Link
