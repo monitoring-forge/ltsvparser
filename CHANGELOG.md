@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.2.6](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.5...v0.2.6) - 2026-08-27
+
+- docs: update benchmarking section in README.md for accuracy by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/20
+- feat: optimize performance of parser and add benchmark targets by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/23
+- ci: bump peter-evans/create-or-update-comment from 4.0.0 to 5.0.0 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/22
+
 ## [v0.2.5](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.4...v0.2.5) - 2026-08-25
 
 - refactor: restructure test cases using builder pattern  by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/13
