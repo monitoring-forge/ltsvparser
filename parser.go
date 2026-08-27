@@ -5,8 +5,6 @@ import (
 	"errors"
 )
 
-var byteTAB = []byte("\t")
-var byteCOL = []byte(":")
 var byteNULL = []byte("")
 
 // Canceler is used to stop parser without errors
@@ -24,7 +22,7 @@ var Cancel = &Canceler{} //nolint:errname
 var cancel = &Canceler{} //nolint:errname
 
 func seekField(d []byte, start int) (field []byte, next int) {
-	p2 := bytes.Index(d[start:], byteTAB)
+	p2 := bytes.IndexByte(d[start:], '\t')
 	if p2 == 0 {
 		return nil, start + 1
 	}
@@ -35,7 +33,7 @@ func seekField(d []byte, start int) (field []byte, next int) {
 }
 
 func splitField(field []byte) (key []byte, value []byte) {
-	p3 := bytes.Index(field, byteCOL)
+	p3 := bytes.IndexByte(field, ':')
 	if p3 < 0 {
 		return field, byteNULL
 	}
@@ -72,6 +70,10 @@ func Each(d []byte, callback CallBackFunc, keys ...[]byte) error {
 		key, value := splitField(field)
 		err := matchAndCallback(key, value, callback, keys)
 		if err != nil {
+			// Performance optimization: avoid errors.As check if err is not *Canceler
+			if _, ok := err.(*Canceler); ok {
+				return nil
+			}
 			if errors.As(err, &cancel) {
 				return nil
 			}

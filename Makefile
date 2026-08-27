@@ -6,3 +6,6 @@ check:
 
 lint:
 	golangci-lint run ./...
+
+bench:
+	go test -bench=. -benchmem -run=^$$
