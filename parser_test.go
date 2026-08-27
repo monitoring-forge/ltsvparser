@@ -217,8 +217,7 @@ var pk = []byte("status")
 var sk = []byte("ptime")
 
 func BenchmarkEach_WithCancel(b *testing.B) {
-	b.ResetTimer()
-	for range b.N {
+	for b.Loop() {
 		_ = Each(
 			input,
 			func(i int, v []byte) error {
@@ -234,8 +233,7 @@ func BenchmarkEach_WithCancel(b *testing.B) {
 }
 
 func BenchmarkEach_WithoutCancel(b *testing.B) {
-	b.ResetTimer()
-	for range b.N {
+	for b.Loop() {
 		_ = Each(
 			input,
 			func(i int, v []byte) error {
