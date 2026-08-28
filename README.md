@@ -77,16 +77,32 @@ Benchmark codes https://gist.github.com/kazeburo/204efec4fab4a781f887ffa3d08a69c
 Parse 100k lines of LTSV
 
 ```
+% make bench
 go test -bench . -benchmem -run=^./...
 goos: darwin
 goarch: arm64
 pkg: github.com/kazeburo/go-ltsvparser-bench
 cpu: Apple M3
-BenchmarkLtsv-8         	       1	1557908291 ns/op	616017312 B/op	19000043 allocs/op
-BenchmarkGoLtsv-8       	       3	 400631569 ns/op	672005890 B/op	 7000013 allocs/op
-BenchmarkLtsvParser-8   	       7	 178214643 ns/op	    4216 B/op	       4 allocs/op
+BenchmarkLtsv-8                        1        1596622375 ns/op        616017072 B/op  19000042 allocs/op
+BenchmarkGoLtsv-8                      3         397009570 ns/op        672006845 B/op   7000022 allocs/op
+BenchmarkLtsvParser-8                 10         110954279 ns/op            4216 B/op          4 allocs/op
 PASS
-ok  	github.com/kazeburo/go-ltsvparser-bench	5.587s
+ok      github.com/kazeburo/go-ltsvparser-bench 4.186s
+```
+
+With GOEXPERIMENT=simd
+```
+% GOAMD64=v3 GOEXPERIMENT=simd make bench
+go test -bench . -benchmem -run=^./...
+goos: darwin
+goarch: arm64
+pkg: github.com/kazeburo/go-ltsvparser-bench
+cpu: Apple M3
+BenchmarkLtsv-8                        1        1577866375 ns/op        616016528 B/op  19000037 allocs/op
+BenchmarkGoLtsv-8                      3         413510764 ns/op        672007074 B/op   7000024 allocs/op
+BenchmarkLtsvParser-8                 12          97328417 ns/op            4216 B/op          4 allocs/op
+PASS
+ok      github.com/kazeburo/go-ltsvparser-bench 4.193s
 ```
 
 ## Link
