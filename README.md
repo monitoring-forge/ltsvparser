@@ -72,8 +72,6 @@ time:05/Feb/2013:15:35:54 +0000	host:192.168.50.1	req:GET /bar HTTP/1.1   status
 
 ## Benchmarking
 
-Benchmark codes https://gist.github.com/kazeburo/204efec4fab4a781f887ffa3d08a69c1
-
 Parse 100k lines of LTSV
 
 ```
