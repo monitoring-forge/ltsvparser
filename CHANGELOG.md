@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.2.7](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.6...v0.2.7) - 2026-08-28
+
+- refactor: optimize field parsing in Each function for better performance by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/24
+- feat: accelerate Each with opt-in SIMD by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/26
+- docs: update benchmarking results in README by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/27
+- docs: remove benchmarking codes link from README by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/28
+
 ## [v0.2.6](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.5...v0.2.6) - 2026-08-27
 
 - docs: update benchmarking section in README.md for accuracy by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/20
