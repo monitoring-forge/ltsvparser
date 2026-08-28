@@ -27,6 +27,13 @@ to use the standard implementation.
 GOEXPERIMENT=simd go test ./...
 ```
 
+On amd64, add `GOAMD64=v3` to enable the instruction set required for the
+optimized SIMD path:
+
+```console
+GOEXPERIMENT=simd GOAMD64=v3 go test ./...
+```
+
 ```
 func main() {
 	data := `
@@ -53,8 +60,7 @@ time:05/Feb/2013:15:35:54 +0000	host:192.168.50.1	req:GET /bar HTTP/1.1   status
 					}
 				case 1:
 					// reqtime
-                    // Also can use jsonparser.ParseFloat
-					rt, _ := strconv.ParseFloat(string(v)), 64)
+					rt, _ := ltsvparser.ParseFloat(v)
 					totalReqTime = totalReqTime + rt
 				}
 				return nil
@@ -70,43 +76,61 @@ time:05/Feb/2013:15:35:54 +0000	host:192.168.50.1	req:GET /bar HTTP/1.1   status
 }
 ```
 
+### ParseFloat
+
+```
+func ParseFloat(value []byte) (float64, error)
+```
+
+`ParseFloat` converts an LTSV value to a `float64`. Common decimal values are
+parsed directly for performance; other valid Go floating-point formats fall
+back to `strconv.ParseFloat` with 64-bit precision.
+
+```go
+requestTime, err := ltsvparser.ParseFloat([]byte("0.030"))
+if err != nil {
+	panic(err)
+}
+fmt.Println(requestTime) // 0.03
+```
+
 ## Benchmarking
 
 Parse 100k lines of LTSV
 
 ```
-% make bench
-go test -bench . -benchmem -run=^./...
+%  make bench                       
+go test -bench '^BenchmarkParser' -benchmem -run=^./...
 goos: darwin
 goarch: arm64
 pkg: github.com/kazeburo/go-ltsvparser-bench
 cpu: Apple M3
-BenchmarkLtsv-8                        1        1596622375 ns/op        616017072 B/op  19000042 allocs/op
-BenchmarkGoLtsv-8                      3         397009570 ns/op        672006845 B/op   7000022 allocs/op
-BenchmarkLtsvParser-8                 10         110954279 ns/op            4216 B/op          4 allocs/op
+BenchmarkParser_Ltsv-8         	       1	1572635458 ns/op	616011272 B/op	19000032 allocs/op
+BenchmarkParser_GoLtsv-8       	       3	 409148389 ns/op	672009458 B/op	 7000018 allocs/op
+BenchmarkParser_LtsvParser-8   	      12	  95090236 ns/op	    4216 B/op	       4 allocs/op
 PASS
-ok      github.com/kazeburo/go-ltsvparser-bench 4.186s
+ok  	github.com/kazeburo/go-ltsvparser-bench	4.101s
 ```
 
 With GOEXPERIMENT=simd
 ```
-% GOEXPERIMENT=simd make bench
-go test -bench . -benchmem -run=^./...
+% GOEXPERIMENT=simd make bench      
+go test -bench '^BenchmarkParser' -benchmem -run=^./...
 goos: darwin
 goarch: arm64
 pkg: github.com/kazeburo/go-ltsvparser-bench
 cpu: Apple M3
-BenchmarkLtsv-8                        1        1577866375 ns/op        616016528 B/op  19000037 allocs/op
-BenchmarkGoLtsv-8                      3         413510764 ns/op        672007074 B/op   7000024 allocs/op
-BenchmarkLtsvParser-8                 12          97328417 ns/op            4216 B/op          4 allocs/op
+BenchmarkParser_Ltsv-8         	       1	1556602333 ns/op	616011416 B/op	19000033 allocs/op
+BenchmarkParser_GoLtsv-8       	       3	 410863583 ns/op	672010536 B/op	 7000027 allocs/op
+BenchmarkParser_LtsvParser-8   	      13	  88663721 ns/op	    4216 B/op	       4 allocs/op
 PASS
-ok      github.com/kazeburo/go-ltsvparser-bench 4.193s
+ok  	github.com/kazeburo/go-ltsvparser-bench	4.108s
 ```
+
+
 
 ## Link
 
-http://ltsv.org/
-
-https://github.com/najeira/ltsv LTSV (Labeled Tab-separated Values) reader/writer for Go language.
-
-https://github.com/Songmu/go-ltsv LTSV parser and encoder for Go with reflection
+- http://ltsv.org/
+- https://github.com/najeira/ltsv LTSV (Labeled Tab-separated Values) reader/writer for Go language.
+- https://github.com/Songmu/go-ltsv LTSV parser and encoder for Go with reflection
