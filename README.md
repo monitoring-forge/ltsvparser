@@ -92,7 +92,7 @@ ok      github.com/kazeburo/go-ltsvparser-bench 4.186s
 
 With GOEXPERIMENT=simd
 ```
-% GOAMD64=v3 GOEXPERIMENT=simd make bench
+% GOEXPERIMENT=simd make bench
 go test -bench . -benchmem -run=^./...
 goos: darwin
 goarch: arm64
