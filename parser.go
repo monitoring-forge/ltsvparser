@@ -21,28 +21,6 @@ var Cancel = &Canceler{} //nolint:errname
 // non public variable for errors.As check
 var cancel = &Canceler{} //nolint:errname
 
-func seekField(d []byte, start int) (field []byte, next int) {
-	p2 := bytes.IndexByte(d[start:], '\t')
-	if p2 == 0 {
-		return nil, start + 1
-	}
-	if p2 < 0 {
-		return d[start:], len(d)
-	}
-	return d[start : start+p2], start + p2 + 1
-}
-
-func splitField(field []byte) (key []byte, value []byte) {
-	p3 := bytes.IndexByte(field, ':')
-	if p3 < 0 {
-		return field, byteNULL
-	}
-	if p3+1 >= len(field) {
-		return field[:p3], byteNULL
-	}
-	return field[:p3], field[p3+1:]
-}
-
 func matchAndCallback(
 	key []byte,
 	value []byte,
@@ -58,20 +36,44 @@ func matchAndCallback(
 }
 
 // Extract multiple keys from LTSV
+// BEGIN-NOSCAN
+// nolint:gocognit
 func Each(d []byte, callback CallBackFunc, keys ...[]byte) error {
 	p1 := 0
 	dlen := len(d)
 	for dlen > p1 {
-		field, next := seekField(d, p1)
-		p1 = next
-		if field == nil {
+		p2 := bytes.IndexByte(d[p1:], '\t')
+		if p2 == 0 {
+			p1++
 			continue
 		}
-		key, value := splitField(field)
+
+		var field []byte
+		if p2 < 0 {
+			field = d[p1:]
+			p1 = dlen
+		} else {
+			field = d[p1 : p1+p2]
+			p1 = p1 + p2 + 1
+		}
+
+		p3 := bytes.IndexByte(field, ':')
+		var key, value []byte
+		if p3 < 0 {
+			key = field
+			value = byteNULL
+		} else if p3+1 >= len(field) {
+			key = field[:p3]
+			value = byteNULL
+		} else {
+			key = field[:p3]
+			value = field[p3+1:]
+		}
+
 		err := matchAndCallback(key, value, callback, keys)
 		if err != nil {
 			// Performance optimization: avoid errors.As check if err is not *Canceler
-			if _, ok := err.(*Canceler); ok {
+			if _, ok := err.(*Canceler); ok { //nolint:errorlint
 				return nil
 			}
 			if errors.As(err, &cancel) {
