@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.2.8](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.7...v0.2.8) - 2026-08-28
+
+- feat: implement ParseFloat function for efficient LTSV float parsing … by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/29
+
 ## [v0.2.7](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.6...v0.2.7) - 2026-08-28
 
 - refactor: optimize field parsing in Each function for better performance by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/24
