@@ -35,10 +35,10 @@ func matchAndCallback(
 	return nil
 }
 
-// Extract multiple keys from LTSV
+// eachStandard extracts multiple keys from LTSV without using archsimd.
 // BEGIN-NOSCAN
 // nolint:gocognit
-func Each(d []byte, callback CallBackFunc, keys ...[]byte) error {
+func eachStandard(d []byte, callback CallBackFunc, keys ...[]byte) error {
 	p1 := 0
 	dlen := len(d)
 	for dlen > p1 {
