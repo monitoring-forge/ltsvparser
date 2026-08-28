@@ -18,6 +18,15 @@ This API refers EachKey of https://github.com/buger/jsonparser.
 
 `Each` parses `[]byte` payload and calls callback function when key is found.
 
+On Go 1.27 and later, building with `GOEXPERIMENT=simd` enables an
+architecture-specific SIMD implementation of `Each` on amd64 and arm64. The
+API and parsing behavior are unchanged. Builds without the experiment continue
+to use the standard implementation.
+
+```console
+GOEXPERIMENT=simd go test ./...
+```
+
 ```
 func main() {
 	data := `
@@ -87,4 +96,3 @@ http://ltsv.org/
 https://github.com/najeira/ltsv LTSV (Labeled Tab-separated Values) reader/writer for Go language.
 
 https://github.com/Songmu/go-ltsv LTSV parser and encoder for Go with reflection
-
