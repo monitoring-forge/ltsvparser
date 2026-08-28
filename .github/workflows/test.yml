@@ -33,3 +33,4 @@ jobs:
           GOEXPERIMENT: simd
         run: |
           make check
+          make bench
