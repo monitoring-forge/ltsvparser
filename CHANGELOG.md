@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.2.9](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.8...v0.2.9) - 2026-09-03
+
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/ltsvparser/pull/31
+- ci: bump Songmu/tagpr from 1.20.1 to 1.20.2 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/34
+
 ## [v0.2.8](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.7...v0.2.8) - 2026-08-28
 
 - feat: implement ParseFloat function for efficient LTSV float parsing … by @kazeburo in https://github.com/monitoring-forge/ltsvparser/pull/29
