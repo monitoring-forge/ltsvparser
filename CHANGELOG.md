@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.2.10](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.9...v0.2.10) - 2026-10-01
+
+- ci: bump Songmu/tagpr from 1.20.3 to 1.21.0 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/38
+
 ## [v0.2.9](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.8...v0.2.9) - 2026-09-26
 
 - Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/ltsvparser/pull/31
