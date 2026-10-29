@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.2.10](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.9...v0.2.10) - 2026-10-29
+
+- ci: bump Songmu/tagpr from 1.20.3 to 1.21.0 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/38
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/ltsvparser/pull/40
+- ci: bump Songmu/tagpr from 1.21.0 to 1.21.2 in the tagpr group by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/42
+- ci: bump actions/create-github-app-token from 3.2.0 to 3.3.0 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/44
+- ci: bump Songmu/tagpr from 1.21.2 to 1.21.3 in the tagpr group by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/46
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/ltsvparser/pull/45
+- go: bump github.com/go-test/deep from 1.1.1 to 1.1.2 in the dependencies group across 1 directory by @dependabot[bot] in https://github.com/monitoring-forge/ltsvparser/pull/43
+
 ## [v0.2.9](https://github.com/monitoring-forge/ltsvparser/compare/v0.2.8...v0.2.9) - 2026-09-26
 
 - Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/ltsvparser/pull/31
